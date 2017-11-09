@@ -42,6 +42,19 @@ func TestSlot_AddNext(t *testing.T) {
 	assert.Equal(2, storey.OccupancyCount())
 	assert.Equal(2, storey.slotList.nextSlot.Position())
 
+	// updates the slot position to 3. the current slot order is 1, 3.
+	// So next slot should be entered at psoition 2.
+	storey.slotList.nextSlot.UpdatePosition(3)
+	assert.Equal(3, storey.slotList.nextSlot.Position())
+
+	scy := NewSlot(NewCar("numberPlate - y", "color - y"), 0)
+	storey.slotList.AddNext(scy)
+	assert.Equal(2, storey.slotList.nextSlot.Position())
+	assert.Equal(3, storey.slotList.nextSlot.nextSlot.Position())
+
+	assert.Equal("numberPlate - y", storey.slotList.nextSlot.car.numberPlate)
+	assert.Equal("numberPlate - x", storey.slotList.nextSlot.nextSlot.car.numberPlate)
+
 	assert.True(true)
 }
 
