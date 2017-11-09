@@ -26,6 +26,24 @@ func TestStorey_OccupancyCount(t *testing.T) {
 	assert.True(true)
 }
 
+func TestStorey_Park(t *testing.T) {
+	assert := assert.New(t)
+
+	storey := NewStorey(4)
+	assert.Equal(0, storey.OccupancyCount())
+
+	storey.Park("numberPlate", "color")
+	assert.Equal(1, storey.OccupancyCount())
+
+	storey.slotList.UpdatePosition(2)
+	storey.Park("numberPlate - x", "color - x")
+
+	assert.Equal("numberPlate - x", storey.slotList.car.numberPlate)
+	assert.Equal(1, storey.slotList.Position())
+
+	assert.True(true)
+}
+
 func TestSlot_AddNext(t *testing.T) {
 	assert := assert.New(t)
 

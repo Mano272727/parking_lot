@@ -34,6 +34,12 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 		return slot, nil
 	}
 
+	if s.slotList.Position() > 1 {
+		currSlot := s.slotList
+		s.slotList = NewSlot(car, 1)
+		s.slotList.AddNext(currSlot)
+	}
+
 	return slot, nil
 }
 
