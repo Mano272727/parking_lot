@@ -76,6 +76,36 @@ func TestSlot_AddNext(t *testing.T) {
 	assert.True(true)
 }
 
+func TestSlot_FindCar(t *testing.T) {
+	assert := assert.New(t)
+
+	storey := NewStorey(4)
+	storey.Park("numberPlate", "color")
+
+	s2, err := storey.Park("numberPlate - x", "color - x")
+	assert.Equal(2, s2.Position())
+
+	s3, err := storey.Park("numberPlate - y", "color - y")
+	assert.NoError(err)
+	assert.Equal(3, s3.Position())
+	assert.Equal(s3.position, s2.nextSlot.Position())
+
+	assert.Equal(2, storey.slotList.nextSlot.Position())
+	assert.Equal(3, storey.slotList.nextSlot.nextSlot.Position())
+
+	sct, err := storey.slotList.FindCar("numberPlate - y")
+	assert.NoError(err)
+	assert.Equal(3, sct.Position())
+
+	sct, err = storey.slotList.FindCar("numberPlate - x")
+	assert.NoError(err)
+	assert.Equal(2, sct.Position())
+
+	sct, err = storey.slotList.FindCar("numberPlate - z")
+	assert.Error(err)
+	assert.True(true)
+}
+
 func TestNewCar(t *testing.T) {
 	assert := assert.New(t)
 

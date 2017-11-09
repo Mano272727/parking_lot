@@ -7,6 +7,10 @@ import (
 var (
 	// ErrMaxSlotReached - error when maximum number of slots allowed in a storey is reached.
 	ErrMaxSlotReached = errors.New("Max slot reached")
+	// ErrNoCarsParked
+	ErrNoCarsParked = errors.New("No cars parked")
+	// ErrCarNotFound
+	ErrCarNotFound = errors.New("Car not found")
 )
 
 // Storey - holds the slots and the details about the storey. (Multi storey
@@ -40,6 +44,9 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 		s.slotList.AddNext(currSlot)
 	}
 
+	slot = NewSlot(car, 0)
+	s.slotList.AddNext(slot)
+
 	return slot, nil
 }
 
@@ -47,7 +54,11 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 // if available Create Slot in the vacancy and associate with adjacent slots
 // return Slot
 func (s *Storey) Leave(numberPlate string) (*Slot, error) {
-	return &Slot{}, nil
+	if s.slotList == nil {
+		return &Slot{}, ErrNoCarsParked
+	}
+
+	return s.slotList.FindCar(numberPlate)
 }
 
 // OccupancyCount returns the number of slots occupied in this storey.
@@ -79,6 +90,19 @@ func (s *Slot) Leave() error {
 	return nil
 }
 
+// FindCar - finds if the slot has the car or else check in the next slot
+func (s *Slot) FindCar(numberPlate string) (*Slot, error) {
+	if s.car.numberPlate == numberPlate {
+		return s, nil
+	}
+
+	if s.nextSlot == nil {
+		return &Slot{}, ErrCarNotFound
+	}
+
+	return s.nextSlot.FindCar(numberPlate)
+}
+
 // AddNext - add a new Slot after the current and associate the current next to the new.
 func (s *Slot) AddNext(sc *Slot) error {
 	if s.nextSlot == nil {
@@ -90,7 +114,10 @@ func (s *Slot) AddNext(sc *Slot) error {
 		currentNext := s.nextSlot
 		s.nextSlot = sc.UpdatePosition(s.position + 1)
 		sc.nextSlot = currentNext
+		return nil
 	}
+
+	s.nextSlot.AddNext(sc)
 
 	return nil
 }
