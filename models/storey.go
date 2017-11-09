@@ -29,7 +29,7 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 	car := NewCar(numberPlate, color)
 
 	if s.OccupancyCount() == 0 {
-		slot := NewSlot(car, 0)
+		slot := NewSlot(car, 1)
 		s.slotList = slot
 		return slot, nil
 	}
@@ -68,13 +68,24 @@ type Slot struct {
 	nextSlot *Slot
 }
 
-// Leave - leave the Car, and connect the prev with next
+// Leave - leave the Car, and connect the prev slot with next
 func (s *Slot) Leave() error {
 	return nil
 }
 
 // AddNext - add a new Slot after the current and associate the current next to the new.
 func (s *Slot) AddNext(sc *Slot) error {
+	if s.nextSlot == nil {
+		s.nextSlot = sc.UpdatePosition(s.position + 1)
+		return nil
+	}
+
+	if s.nextSlot.position > (s.position + 1) {
+		currentNext := s.nextSlot
+		s.nextSlot = sc.UpdatePosition(s.position + 1)
+		sc.nextSlot = currentNext
+	}
+
 	return nil
 }
 
@@ -85,6 +96,17 @@ func (s Slot) CountSelf() int {
 	}
 
 	return 1 + s.nextSlot.CountSelf()
+}
+
+// UpdatePosition updates the position ofthe slot to the specified position value.
+func (s *Slot) UpdatePosition(position int) *Slot {
+	s.position = position
+	return s
+}
+
+// Position return the position of the Slot
+func (s Slot) Position() int {
+	return s.position
 }
 
 // NewSlot returns a slot object
