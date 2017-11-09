@@ -1,3 +1,11 @@
+#### Tests
+
+run tests using
+
+```
+go test ./...
+```
+
 #### Code Quality
 
 Pre commit hooks:
@@ -13,3 +21,5 @@ pre-commit install
 for installing the hook to repos pre-commit file.
 
 Install pre-commit from http://pre-commit.com/
+
+gometalinter - https://github.com/alecthomas/gometalinter
