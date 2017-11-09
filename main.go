@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./models"
+	"parking_lot/models"
 )
 
 func main() {

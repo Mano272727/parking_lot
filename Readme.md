@@ -1,3 +1,5 @@
+It is necessary that the code should be placed in `$GOPATH/src/` folder.
+
 #### Tests
 
 run tests using
