@@ -74,6 +74,16 @@ func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 	return slotFound, nil
 }
 
+// FindByRegistrationNumber - find the slot which has car with the provided
+// registration number in the storey.
+func (s *Storey) FindByRegistrationNumber(numberPlate string) (*Slot, error) {
+	if s.slotList == nil {
+		return &Slot{}, ErrNoCarsParked
+	}
+
+	return s.slotList.FindCar(numberPlate)
+}
+
 // OccupancyCount returns the number of slots occupied in this storey.
 func (s *Storey) OccupancyCount() int {
 	if s.slotList == nil {

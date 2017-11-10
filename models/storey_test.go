@@ -14,6 +14,36 @@ func TestNewStorey(t *testing.T) {
 	assert.True(true)
 }
 
+func TestStorey_FindByRegistrationNumber(t *testing.T) {
+	assert := assert.New(t)
+
+	storey := NewStorey(4)
+	storey.Park("numberPlate", "color")
+
+	sc := NewSlot(NewCar("numberPlate - x", "color - x"), 0)
+	storey.slotList.AddNext(sc)
+	// updates the slot position to 3. the current slot order is 1, 3.
+	// So next slot should be entered at psoition 2.
+	storey.slotList.nextSlot.UpdatePosition(3)
+	assert.Equal(3, storey.slotList.nextSlot.Position())
+	scy := NewSlot(NewCar("numberPlate - y", "color - y"), 0)
+	storey.slotList.AddNext(scy)
+
+	slot, err := storey.FindByRegistrationNumber("numberPlate - y")
+	assert.Equal(2, slot.position)
+	assert.NoError(err)
+
+	slot, err = storey.FindByRegistrationNumber("numberPlate - z")
+	assert.Equal(0, slot.position)
+	assert.Error(err)
+
+	slot, err = storey.FindByRegistrationNumber("numberPlate")
+	assert.Equal(1, slot.position)
+	assert.NoError(err)
+
+	assert.True(true)
+}
+
 func TestStorey_OccupancyCount(t *testing.T) {
 	assert := assert.New(t)
 
