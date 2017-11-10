@@ -11,6 +11,8 @@ var (
 	ErrNoCarsParked = errors.New("No cars parked")
 	// ErrCarNotFound - error no cars parked with this registration number.
 	ErrCarNotFound = errors.New("Car not found")
+	// ErrCarWithColorNotFound - error no cars parked with this registration number.
+	ErrCarWithColorNotFound = errors.New("Car with specified color not found")
 )
 
 // Storey - holds the slots and the details about the storey. (Multi storey
@@ -76,12 +78,30 @@ func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 
 // FindByRegistrationNumber - find the slot which has car with the provided
 // registration number in the storey.
-func (s *Storey) FindByRegistrationNumber(numberPlate string) (*Slot, error) {
+func (s Storey) FindByRegistrationNumber(numberPlate string) (*Slot, error) {
 	if s.slotList == nil {
 		return &Slot{}, ErrNoCarsParked
 	}
 
 	return s.slotList.FindCar(numberPlate)
+}
+
+// FindAllByColor find all cars parked with the color
+func (s Storey) FindAllByColor(color string) ([]*Slot, error) {
+	if s.slotList == nil {
+		return []*Slot{}, ErrNoCarsParked
+	}
+
+	slots, err := s.slotList.FindColor(color)
+	if err != nil {
+		return slots, err
+	}
+
+	if len(slots) == 0 {
+		return slots, ErrCarWithColorNotFound
+	}
+
+	return slots, nil
 }
 
 // OccupancyCount returns the number of slots occupied in this storey.
@@ -127,6 +147,29 @@ func (s *Slot) FindCar(numberPlate string) (*Slot, error) {
 	}
 
 	return s.nextSlot.FindCar(numberPlate)
+}
+
+// FindColor find the cars parked with the color specified, and pass the query to next slot.
+func (s *Slot) FindColor(color string) ([]*Slot, error) {
+	if s.car.color == color {
+		if s.nextSlot == nil {
+			return []*Slot{
+				s,
+			}, nil
+		}
+
+		slots, err := s.nextSlot.FindColor(color)
+		if err == nil {
+			slots = append(slots, s)
+		}
+		return slots, err
+	}
+
+	if s.nextSlot == nil {
+		return []*Slot{}, nil
+	}
+
+	return s.nextSlot.FindColor(color)
 }
 
 // AddNext - add a new Slot after the current and associate the current next to the new.
