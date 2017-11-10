@@ -8,6 +8,7 @@ import (
 
 func PendingExampleExecutableFile() {
 	ExecuteFile("samples/file_input.txt")
+	// without fmt the exmaple is not working. Investigation pending.
 	fmt.Println("")
 	// output:
 	// Created   a   parking   lot   with   6   slots

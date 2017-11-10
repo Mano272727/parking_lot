@@ -1,10 +1,8 @@
-package ds
-
-import "parking_lot/models"
+package models
 
 type dataStore interface {
-	Park(string, string) (*models.Slot, error)
-	LeaveByPosition(int) (*models.Slot, error)
-	FindByRegistrationNumber(string) (*models.Slot, error)
-	FindAllByColor(string) ([]*models.Slot, error)
+	Park(string, string) (*StoreyResponse, error)
+	LeaveByPosition(int) (*StoreyResponse, error)
+	FindByRegistrationNumber(string) (*StoreyResponse, error)
+	FindAllByColor(string) (*StoreyResponse, error)
 }

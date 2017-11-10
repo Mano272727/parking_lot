@@ -57,11 +57,12 @@ func parseCommand(command string) []string {
 	return parsedCommand
 }
 
-func processCommand(command []string) (models.SlotResponse, error) {
+// processCommand process each command
+func processCommand(command []string) (models.StoreyResponse, error) {
 	switch command[0] {
 	case "create_parking_lot":
 	default:
 	}
 
-	return models.SlotResponse, nil
+	return models.StoreyResponse{}, nil
 }

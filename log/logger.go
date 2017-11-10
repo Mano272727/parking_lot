@@ -7,6 +7,7 @@ type Logger interface {
 }
 
 // Loggable - need to Replace with stdlib interface that has String method.
+// models.StoreyResponse implements Loggable.
 type Loggable interface {
 	String() string
 }
