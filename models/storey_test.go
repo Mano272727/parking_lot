@@ -76,6 +76,34 @@ func TestSlot_AddNext(t *testing.T) {
 	assert.True(true)
 }
 
+func TestSlot_AddNext_PrevSlot(t *testing.T) {
+	assert := assert.New(t)
+
+	storey := NewStorey(4)
+	storey.Park("numberPlate", "color")
+
+	sc := NewSlot(NewCar("numberPlate - x", "color - x"), 0)
+	storey.slotList.AddNext(sc)
+	// updates the slot position to 3. the current slot order is 1, 3.
+	// So next slot should be entered at psoition 2.
+	storey.slotList.nextSlot.UpdatePosition(3)
+	assert.Equal(3, storey.slotList.nextSlot.Position())
+
+	scy := NewSlot(NewCar("numberPlate - y", "color - y"), 0)
+	storey.slotList.AddNext(scy)
+
+	latestSlot := storey.slotList.nextSlot.nextSlot
+
+	assert.Equal("numberPlate - y", latestSlot.prevSlot.car.numberPlate)
+	assert.Equal("numberPlate - x", latestSlot.car.numberPlate)
+	assert.Equal("numberPlate", latestSlot.prevSlot.prevSlot.car.numberPlate)
+	assert.Equal(1, latestSlot.prevSlot.prevSlot.Position())
+	assert.Equal(2, latestSlot.prevSlot.Position())
+	assert.Equal(3, latestSlot.Position())
+
+	assert.True(true)
+}
+
 func TestSlot_FindCar(t *testing.T) {
 	assert := assert.New(t)
 

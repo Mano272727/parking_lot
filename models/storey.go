@@ -7,9 +7,9 @@ import (
 var (
 	// ErrMaxSlotReached - error when maximum number of slots allowed in a storey is reached.
 	ErrMaxSlotReached = errors.New("Max slot reached")
-	// ErrNoCarsParked
+	// ErrNoCarsParked - error no cars parked.
 	ErrNoCarsParked = errors.New("No cars parked")
-	// ErrCarNotFound
+	// ErrCarNotFound - error no cars parked with this registration number.
 	ErrCarNotFound = errors.New("Car not found")
 )
 
@@ -38,10 +38,13 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 		return slot, nil
 	}
 
+	// Added comments in func (s *Slot) AddNext(sc *Slot) error {
+	// about how to improve the code.
 	if s.slotList.Position() > 1 {
 		currSlot := s.slotList
 		s.slotList = NewSlot(car, 1)
 		s.slotList.AddNext(currSlot)
+		currSlot.prevSlot = s.slotList
 	}
 
 	slot = NewSlot(car, 0)
@@ -105,15 +108,24 @@ func (s *Slot) FindCar(numberPlate string) (*Slot, error) {
 
 // AddNext - add a new Slot after the current and associate the current next to the new.
 func (s *Slot) AddNext(sc *Slot) error {
+	// This requires, Storey to be informed to start looking at the new Slot
+	// Or, let each slot point to Storey, so we can traverse and edit easily.
+	// if s.prevSlot == nil && s.position > 1 {
+	// 	sc.UpdatePosition(1).nextSlot = s
+	// }
+
 	if s.nextSlot == nil {
 		s.nextSlot = sc.UpdatePosition(s.position + 1)
+		sc.prevSlot = s
 		return nil
 	}
 
 	if s.nextSlot.position > (s.position + 1) {
 		currentNext := s.nextSlot
 		s.nextSlot = sc.UpdatePosition(s.position + 1)
+		sc.prevSlot = s
 		sc.nextSlot = currentNext
+		currentNext.prevSlot = sc
 		return nil
 	}
 
