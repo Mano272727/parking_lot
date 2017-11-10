@@ -76,6 +76,27 @@ func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 	return slotFound, nil
 }
 
+// LeaveByPosition - check if the Slot is available
+// if available Create Slot in the vacancy and associate with adjacent slots
+// return Slot
+func (s *Storey) LeaveByPosition(position int) (*Slot, error) {
+	if s.slotList == nil {
+		return &Slot{}, ErrNoCarsParked
+	}
+
+	slotFound, err := s.slotList.FindPosition(position)
+	if err != nil {
+		return &Slot{}, ErrCarNotFound
+	}
+
+	slotFound.Leave()
+	if slotFound.prevSlot == nil {
+		s.slotList = slotFound.nextSlot
+	}
+
+	return slotFound, nil
+}
+
 // FindByRegistrationNumber - find the slot which has car with the provided
 // registration number in the storey.
 func (s Storey) FindByRegistrationNumber(numberPlate string) (*Slot, error) {
@@ -147,6 +168,19 @@ func (s *Slot) FindCar(numberPlate string) (*Slot, error) {
 	}
 
 	return s.nextSlot.FindCar(numberPlate)
+}
+
+// FindPosition - finds if the slot has the car or else check in the next slot
+func (s *Slot) FindPosition(position int) (*Slot, error) {
+	if s.position == position {
+		return s, nil
+	}
+
+	if s.nextSlot == nil {
+		return &Slot{}, ErrCarNotFound
+	}
+
+	return s.nextSlot.FindPosition(position)
 }
 
 // FindColor find the cars parked with the color specified, and pass the query to next slot.

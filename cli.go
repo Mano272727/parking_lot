@@ -8,6 +8,8 @@ import (
 	"os"
 	// string
 	"strings"
+	// models
+	"parking_lot/models"
 )
 
 var (
@@ -27,7 +29,7 @@ func ExecuteFile(filepath string) error {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		parseCommand(scanner.Text())
+		processCommand(parseCommand(scanner.Text()))
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -53,4 +55,13 @@ func parseCommand(command string) []string {
 	}
 
 	return parsedCommand
+}
+
+func processCommand(command []string) (models.SlotResponse, error) {
+	switch command[0] {
+	case "create_parking_lot":
+	default:
+	}
+
+	return models.SlotResponse, nil
 }
