@@ -19,6 +19,11 @@ func (s StoreyResponse) String() string {
 		return fmt.Sprintf("Allocated slot number: %d", s.slots[0].Position())
 	case CmdCreateParkingLot:
 	case CmdStatus:
+		content := fmt.Sprintf("Slot No.\tRegistration No\tColor")
+		for _, slot := range s.slots {
+			content += fmt.Sprintf("\n%d %s %s", slot.Position(), slot.RegistrationNumber(), slot.Color())
+		}
+		return content
 	case CmdLeave:
 		return fmt.Sprintf("Slot number %d is free", s.slots[0].Position())
 	case CmdRegistrationNumberByColor:

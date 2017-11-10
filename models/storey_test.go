@@ -142,6 +142,21 @@ func TestSlot_AddNext(t *testing.T) {
 	assert.True(true)
 }
 
+func TestSlot_ListSelf(t *testing.T) {
+	assert := assert.New(t)
+
+	storey := NewStorey(4)
+	storey.Park("numberPlate", "color")
+	sc := NewSlot(NewCar("numberPlate - x", "color - x"), 0)
+	storey.slotList.AddNext(sc)
+	scy := NewSlot(NewCar("numberPlate - y", "color - y"), 0)
+	storey.slotList.AddNext(scy)
+
+	slots := storey.slotList.ListSelf()
+	assert.Equal(3, len(slots))
+	assert.True(true)
+}
+
 func TestStorey_Leave(t *testing.T) {
 	assert := assert.New(t)
 

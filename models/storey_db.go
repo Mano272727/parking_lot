@@ -68,3 +68,12 @@ func (s *storeyDB) FindAllByColor(color, cmd string) (StoreyResponse, error) {
 
 	return sResponse, err
 }
+
+// All returns the slots
+func (s *storeyDB) All() (StoreyResponse, error) {
+	slots, err := s.Storeys[0].AllSlots()
+	return StoreyResponse{
+		slots:   slots,
+		command: CmdStatus,
+	}, err
+}

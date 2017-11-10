@@ -6,4 +6,5 @@ type DataStore interface {
 	LeaveByPosition(int) (StoreyResponse, error)
 	FindByRegistrationNumber(string) (StoreyResponse, error)
 	FindAllByColor(string, string) (StoreyResponse, error)
+	All() (StoreyResponse, error)
 }

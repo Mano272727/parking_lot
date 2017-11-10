@@ -130,6 +130,15 @@ func (s Storey) FindAllByColor(color string) ([]Slot, error) {
 	return slotsList, nil
 }
 
+// AllSlots returns all the slots
+func (s *Storey) AllSlots() ([]Slot, error) {
+	if s.slotList == nil {
+		return []Slot{}, ErrNoCarsParked
+	}
+
+	return s.slotList.ListSelf(), nil
+}
+
 // OccupancyCount returns the number of slots occupied in this storey.
 func (s *Storey) OccupancyCount() int {
 	if s.slotList == nil {
@@ -152,6 +161,15 @@ type Slot struct {
 	car      *Car
 	position int
 	nextSlot *Slot
+}
+
+// ListSelf list self and help others list themselves
+func (s *Slot) ListSelf() []Slot {
+	if s.nextSlot == nil {
+		return []Slot{*s}
+	}
+
+	return append([]Slot{*s}, s.nextSlot.ListSelf()...)
 }
 
 // Leave - leave the Car, and connect the prev slot with next
@@ -257,6 +275,24 @@ func (s *Slot) UpdatePosition(position int) *Slot {
 // Position return the position of the Slot
 func (s Slot) Position() int {
 	return s.position
+}
+
+// RegistrationNumber returns the registration number of the car parked in the slot
+func (s Slot) RegistrationNumber() string {
+	if s.car == nil {
+		return ""
+	}
+
+	return s.car.numberPlate
+}
+
+// Color returns the color of the car parked in the slot
+func (s Slot) Color() string {
+	if s.car == nil {
+		return ""
+	}
+
+	return s.car.color
 }
 
 // NewSlot returns a slot object
