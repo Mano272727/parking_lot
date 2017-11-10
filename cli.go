@@ -4,7 +4,6 @@ package main
 // reduces the amount of code. and there is nothing mutable here to make an object.
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	// string
@@ -49,7 +48,7 @@ func ExecuteFile(filepath string) error {
 			}
 			// convert this to a new storey addition or update max slot method
 			db = models.NewStoreyRunTimeDB(maxSlots)
-			fmt.Printf("Created a parking lot with %d slots\n", maxSlots)
+			stdioLogger.Log(models.NewDbResponse(*db.Storeys[0], models.CmdCreateParkingLot), nil)
 			firstLine = false
 			continue
 		}
