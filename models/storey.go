@@ -61,7 +61,17 @@ func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 		return &Slot{}, ErrNoCarsParked
 	}
 
-	return s.slotList.FindCar(numberPlate)
+	slotFound, err := s.slotList.FindCar(numberPlate)
+	if err != nil {
+		return &Slot{}, ErrCarNotFound
+	}
+
+	slotFound.Leave()
+	if slotFound.prevSlot == nil {
+		s.slotList = slotFound.nextSlot
+	}
+
+	return slotFound, nil
 }
 
 // OccupancyCount returns the number of slots occupied in this storey.
@@ -90,6 +100,9 @@ type Slot struct {
 
 // Leave - leave the Car, and connect the prev slot with next
 func (s *Slot) Leave() error {
+	if s.prevSlot != nil {
+		s.prevSlot.nextSlot = s.nextSlot
+	}
 	return nil
 }
 
