@@ -4,6 +4,7 @@ package main
 // reduces the amount of code. and there is nothing mutable here to make an object.
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	// string
@@ -59,6 +60,41 @@ func ExecuteFile(filepath string) error {
 		log.Fatal(err)
 	}
 
+	return nil
+}
+
+// InteractiveSession take the user through interactive session.
+func InteractiveSession() error {
+	command := "Start"
+	stdioLogger := logs.NewStdioLog()
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("\nInput")
+	text, _ := reader.ReadString('\n')
+	text = strings.TrimRight(text, "\r\n")
+	commands := parseCommand(text)
+	if commands[0] != models.CmdCreateParkingLot {
+		panic("first command needs to be creating the storey")
+	}
+	maxSlots, err := strToInt(commands[1])
+	if err != nil {
+		panic(err.Error())
+	}
+	// convert this to a new storey addition or update max slot method
+	db := models.NewStoreyRunTimeDB(maxSlots)
+	fmt.Println("\nOutput")
+	stdioLogger.Log(models.NewDbResponse(*db.Storeys[0], models.CmdCreateParkingLot), nil)
+
+	for command != "Exit" {
+		fmt.Println("\nInput")
+		text, _ := reader.ReadString('\n')
+		text = strings.TrimRight(text, "\r\n")
+		// text = text[:len(text)-1]
+		commands := parseCommand(text)
+		response, err := processCommand(db, commands)
+		fmt.Println("\nOutput")
+		stdioLogger.Log(response, err)
+		command = commands[0]
+	}
 	return nil
 }
 
