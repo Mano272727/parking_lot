@@ -9,7 +9,7 @@ type storeyDB struct {
 }
 
 // NewStoreyRunTimeDB returns an instance of the storey db.
-func NewStoreyRunTimeDB(maxSlots int) dataStore {
+func NewStoreyRunTimeDB(maxSlots int) *storeyDB {
 	storey := NewStorey(maxSlots)
 	return &storeyDB{
 		[]*Storey{
@@ -19,10 +19,10 @@ func NewStoreyRunTimeDB(maxSlots int) dataStore {
 }
 
 // Park a car
-func (s *storeyDB) Park(numberPlate, color string) (*StoreyResponse, error) {
+func (s *storeyDB) Park(numberPlate, color string) (StoreyResponse, error) {
 	// until we start supporting more than one storey
 	slot, err := s.Storeys[0].Park(numberPlate, color)
-	sResponse := &StoreyResponse{
+	sResponse := StoreyResponse{
 		slots: []Slot{
 			*slot,
 		},
@@ -33,16 +33,24 @@ func (s *storeyDB) Park(numberPlate, color string) (*StoreyResponse, error) {
 }
 
 // LeaveByPosition leave a car froma slot by the position
-func (s *storeyDB) LeaveByPosition(position int) (*StoreyResponse, error) {
-	return &StoreyResponse{}, nil
+func (s *storeyDB) LeaveByPosition(position int) (StoreyResponse, error) {
+	slot, err := s.Storeys[0].LeaveByPosition(position)
+	sResponse := StoreyResponse{
+		slots: []Slot{
+			*slot,
+		},
+		command: CmdLeave,
+	}
+
+	return sResponse, err
 }
 
 // FindByRegistrationNumber find slot having car with registration number.
-func (s *storeyDB) FindByRegistrationNumber(numberPlate string) (*StoreyResponse, error) {
-	return &StoreyResponse{}, nil
+func (s *storeyDB) FindByRegistrationNumber(numberPlate string) (StoreyResponse, error) {
+	return StoreyResponse{}, nil
 }
 
 // FindAllByColor find the slots having cars with the color.
-func (s *storeyDB) FindAllByColor(color string) (*StoreyResponse, error) {
-	return &StoreyResponse{}, nil
+func (s *storeyDB) FindAllByColor(color string) (StoreyResponse, error) {
+	return StoreyResponse{}, nil
 }

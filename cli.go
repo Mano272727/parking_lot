@@ -7,8 +7,10 @@ import (
 	"log"
 	"os"
 	// string
+	"strconv"
 	"strings"
 	// models
+	logs "parking_lot/log"
 	"parking_lot/models"
 )
 
@@ -28,8 +30,28 @@ func ExecuteFile(filepath string) error {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+
+	db := models.NewStoreyRunTimeDB(0)
+	stdioLogger := logs.NewStdioLog()
+
+	firstLine := true
 	for scanner.Scan() {
-		processCommand(parseCommand(scanner.Text()))
+		if firstLine {
+			text := scanner.Text()
+			command := parseCommand(text)
+			if command[0] != models.CmdCreateParkingLot {
+				panic("first command needs to be creating the storey")
+			}
+			maxSlots, err := strToInt(command[1])
+			if err != nil {
+				panic(err.Error())
+			}
+			// convert this to a new storey addition or update max slot method
+			db = models.NewStoreyRunTimeDB(maxSlots)
+			firstLine = false
+			continue
+		}
+		stdioLogger.Log(processCommand(db, parseCommand(scanner.Text())))
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -58,11 +80,29 @@ func parseCommand(command string) []string {
 }
 
 // processCommand process each command
-func processCommand(command []string) (models.StoreyResponse, error) {
+func processCommand(db models.DataStore, command []string) (models.StoreyResponse, error) {
 	switch command[0] {
-	case "create_parking_lot":
+	case models.CmdPark:
+		return db.Park(command[1], command[2])
+	case models.CmdCreateParkingLot:
+	case models.CmdStatus:
+	case models.CmdLeave:
+		slotPosition, err := strToInt(command[1])
+		if err != nil {
+			panic(err.Error())
+		}
+		return db.LeaveByPosition(slotPosition)
+	case models.CmdRegistrationNumberByColor:
+	case models.CmdSlotnoByCarColor:
+	case models.CmdSlotnoByRegNumber:
 	default:
 	}
 
 	return models.StoreyResponse{}, nil
+}
+
+// strToInt conver string to integer
+func strToInt(str string) (int, error) {
+	nonFractionalPart := strings.Split(str, ".")
+	return strconv.Atoi(nonFractionalPart[0])
 }
