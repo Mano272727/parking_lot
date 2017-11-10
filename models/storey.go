@@ -6,7 +6,7 @@ import (
 
 var (
 	// ErrMaxSlotReached - error when maximum number of slots allowed in a storey is reached.
-	ErrMaxSlotReached = errors.New("Max slot reached")
+	ErrMaxSlotReached = errors.New("Sorry, parking lot is full")
 	// ErrNoCarsParked - error no cars parked.
 	ErrNoCarsParked = errors.New("No cars parked")
 	// ErrCarNotFound - error no cars parked with this registration number.

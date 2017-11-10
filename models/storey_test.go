@@ -59,16 +59,19 @@ func TestStorey_FindAllByColor(t *testing.T) {
 	scy := NewSlot(NewCar("numberPlate - y", "color - y"), 0)
 	storey.slotList.AddNext(scy)
 
+	// 2 cars with color present
 	slots, err := storey.FindAllByColor("color")
 	assert.Equal(2, len(slots))
 	assert.Equal(3, slots[0].Position())
 	assert.Equal(1, slots[1].Position())
 	assert.NoError(err)
 
+	// no cars with color present
 	slots, err = storey.FindAllByColor("color - z")
 	assert.Equal(0, len(slots))
 	assert.Error(err)
 
+	// 1 car with color present
 	slots, err = storey.FindAllByColor("color - y")
 	assert.Equal(1, len(slots))
 	assert.Equal(2, slots[0].Position())
