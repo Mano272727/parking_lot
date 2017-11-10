@@ -62,8 +62,8 @@ func TestStorey_FindAllByColor(t *testing.T) {
 	// 2 cars with color present
 	slots, err := storey.FindAllByColor("color")
 	assert.Equal(2, len(slots))
-	assert.Equal(3, slots[0].Position())
-	assert.Equal(1, slots[1].Position())
+	assert.Equal(1, slots[0].Position())
+	assert.Equal(3, slots[1].Position())
 	assert.NoError(err)
 
 	// no cars with color present

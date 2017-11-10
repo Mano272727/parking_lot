@@ -47,10 +47,24 @@ func (s *storeyDB) LeaveByPosition(position int) (StoreyResponse, error) {
 
 // FindByRegistrationNumber find slot having car with registration number.
 func (s *storeyDB) FindByRegistrationNumber(numberPlate string) (StoreyResponse, error) {
-	return StoreyResponse{}, nil
+	slot, err := s.Storeys[0].FindByRegistrationNumber(numberPlate)
+	sResponse := StoreyResponse{
+		slots: []Slot{
+			*slot,
+		},
+		command: CmdSlotnoByRegNumber,
+	}
+
+	return sResponse, err
 }
 
 // FindAllByColor find the slots having cars with the color.
-func (s *storeyDB) FindAllByColor(color string) (StoreyResponse, error) {
-	return StoreyResponse{}, nil
+func (s *storeyDB) FindAllByColor(color, cmd string) (StoreyResponse, error) {
+	slots, err := s.Storeys[0].FindAllByColor(color)
+	sResponse := StoreyResponse{
+		slots:   slots,
+		command: cmd,
+	}
+
+	return sResponse, err
 }

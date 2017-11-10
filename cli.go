@@ -93,8 +93,11 @@ func processCommand(db models.DataStore, command []string) (models.StoreyRespons
 		}
 		return db.LeaveByPosition(slotPosition)
 	case models.CmdRegistrationNumberByColor:
+		return db.FindAllByColor(command[1], models.CmdRegistrationNumberByColor)
 	case models.CmdSlotnoByCarColor:
+		return db.FindAllByColor(command[1], models.CmdSlotnoByCarColor)
 	case models.CmdSlotnoByRegNumber:
+		return db.FindByRegistrationNumber(command[1])
 	default:
 	}
 
