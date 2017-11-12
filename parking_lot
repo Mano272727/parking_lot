@@ -1,0 +1,2 @@
+#!/bin/sh
+go test ./... && go build -o pl . && ./pl $1
