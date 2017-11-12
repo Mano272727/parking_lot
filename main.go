@@ -1,12 +1,16 @@
 package main
 
 import (
-// "parking_lot/models"
+	"flag"
 )
 
 func main() {
-	// models.NewStorey(4)
-	// models.NewCar("", "")
-	ExecuteFile("samples/file_input.txt")
+	flag.Parse()
+
+	if len(flag.Args()) > 0 {
+		ExecuteFile(flag.Args()[0])
+		return
+	}
+
 	InteractiveSession()
 }
