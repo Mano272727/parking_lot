@@ -1,2 +1,2 @@
 #!/bin/sh
-go test ./... && go build -o pl . && ./pl $1
+go test ./... > output.log && go build -o pl . && ./pl $1
