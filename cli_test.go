@@ -12,6 +12,7 @@ func ExampleExecutableFile() {
 	fmt.Println("")
 	// output:
 	// Created a parking lot with 6 slots
+	// Created a parking lot with 10 slots
 	// Allocated slot number: 1
 	// Allocated slot number: 2
 	// Allocated slot number: 3

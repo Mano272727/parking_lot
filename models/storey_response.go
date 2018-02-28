@@ -9,12 +9,15 @@ import (
 // StoreyResponse response object that encapsulates the data representation.
 type StoreyResponse struct {
 	slots   []Slot
+	storey  *Storey
 	command string
 }
 
 // String returns string representation of the data for logging.
 func (s StoreyResponse) String() string {
 	switch s.command {
+	case CmdCreateParkingLot:
+		return fmt.Sprintf("Created a parking lot with %d slots", s.storey.maxSlots)
 	case CmdPark:
 		return fmt.Sprintf("Allocated slot number: %d", s.slots[0].Position())
 	case CmdCreateParkingLot:

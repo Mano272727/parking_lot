@@ -7,4 +7,5 @@ type DataStore interface {
 	FindByRegistrationNumber(string) (StoreyResponse, error)
 	FindAllByColor(string, string) (StoreyResponse, error)
 	All() (StoreyResponse, error)
+	AddStorey(int) (StoreyResponse, error)
 }

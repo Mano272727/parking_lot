@@ -21,6 +21,7 @@ type Storey struct {
 	maxSlots int
 	// Linked list should keep it memory efficient.
 	slotList *Slot
+	db       *storeyDB
 }
 
 // Park - check if the Slot is available
@@ -55,8 +56,8 @@ func (s *Storey) Park(numberPlate, color string) (*Slot, error) {
 	return slot, nil
 }
 
-// Leave - check if the Slot is available
-// if available Create Slot in the vacancy and associate with adjacent slots
+// Leave - find the vehicle by numberplate and free the slot
+// and associate plevious slot with adjacent slots
 // return Slot
 func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 	if s.slotList == nil {
@@ -76,8 +77,8 @@ func (s *Storey) Leave(numberPlate string) (*Slot, error) {
 	return slotFound, nil
 }
 
-// LeaveByPosition - check if the Slot is available
-// if available Create Slot in the vacancy and associate with adjacent slots
+// LeaveByPosition - find the slot by position and free the slot
+// and associate plevious slot with adjacent slots
 // return Slot
 func (s *Storey) LeaveByPosition(position int) (*Slot, error) {
 	if s.slotList == nil {

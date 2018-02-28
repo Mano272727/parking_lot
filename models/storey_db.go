@@ -1,21 +1,40 @@
 package models
 
+var (
+	// RuleEvenDistribution - rule set to evenly distribute the cars accross parking lot.
+	RuleEvenDistribution = "even_distribution"
+)
+
 // storeyDB holds the data in memory while run time.
 // in requirements document multi storey is mentioned.
 // but no further actions are requested in the same.
 // so the Storey is defined as an array.
 type storeyDB struct {
 	Storeys []*Storey
+	Rule    string
 }
 
 // NewStoreyRunTimeDB returns an instance of the storey db.
 func NewStoreyRunTimeDB(maxSlots int) *storeyDB {
 	storey := NewStorey(maxSlots)
-	return &storeyDB{
-		[]*Storey{
+	db := &storeyDB{
+		Storeys: []*Storey{
 			storey,
 		},
 	}
+	storey.db = db
+	return db
+}
+
+func (s *storeyDB) AddStorey(maxSlots int) (StoreyResponse, error) {
+	storey := NewStorey(maxSlots)
+	storey.db = s
+	s.Storeys = append(s.Storeys, storey)
+	return StoreyResponse{
+		slots:   []Slot{},
+		storey:  storey,
+		command: CmdCreateParkingLot,
+	}, nil
 }
 
 // Park a car

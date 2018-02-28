@@ -119,6 +119,12 @@ func parseCommand(command string) []string {
 // processCommand process each command
 func processCommand(db models.DataStore, command []string) (models.StoreyResponse, error) {
 	switch command[0] {
+	case models.CmdCreateParkingLot:
+		maxSlots, err := strToInt(command[1])
+		if err != nil {
+			panic(err.Error())
+		}
+		return db.AddStorey(maxSlots)
 	case models.CmdPark:
 		return db.Park(command[1], command[2])
 	case models.CmdCreateParkingLot:
