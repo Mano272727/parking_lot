@@ -21,6 +21,7 @@ func NewStoreyRunTimeDB(maxSlots int) *storeyDB {
 		Storeys: []*Storey{
 			storey,
 		},
+		Rule: RuleEvenDistribution,
 	}
 	storey.db = db
 	return db
@@ -40,7 +41,24 @@ func (s *storeyDB) AddStorey(maxSlots int) (StoreyResponse, error) {
 // Park a car
 func (s *storeyDB) Park(numberPlate, color string) (StoreyResponse, error) {
 	// until we start supporting more than one storey
-	slot, err := s.Storeys[0].Park(numberPlate, color)
+	occupancy := map[int]int{}
+	for i, stry := range s.Storeys {
+		occupancy[i] = (stry.OccupancyCount() / stry.maxSlots) * 100
+	}
+	lowestIdx := 0
+
+	if s.Rule == RuleEvenDistribution {
+		// find the lowest occupant
+		for i := 0; i < len(s.Storeys)-1; i++ {
+			if occupancy[i+1] < occupancy[i] {
+				lowestIdx = i + 1
+			}
+		}
+
+	} else {
+
+	}
+	slot, err := s.Storeys[lowestIdx].Park(numberPlate, color)
 	sResponse := StoreyResponse{
 		slots: []Slot{
 			*slot,
