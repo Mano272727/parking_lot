@@ -8,6 +8,7 @@ import (
 
 func ExampleExecutableFile() {
 	ExecuteFile("samples/file_input.txt")
+
 	// without fmt the exmaple is not working. Investigation pending.
 	fmt.Println("")
 	// output:
