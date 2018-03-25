@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 	// models
-	logs "parking_lot/log"
-	"parking_lot/models"
+	logs "github.com/sumitasok/parking_lot/log"
+	"github.com/sumitasok/parking_lot/models"
 )
 
 var (
